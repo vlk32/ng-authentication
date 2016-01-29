@@ -1,16 +1,16 @@
 {
     "name": "angular2-authorization",
     "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
+    "description": "Authorization and authentication module for angular2",
     "scripts":
     {
+        "clean": "rimraf ./*.d.ts ./*.js ./*.map",
+        "clean:modules": "rimraf ./node_modules",
+        "clean:all": "npm run clean && npm run clean:modules",
         "tsc": "tsc",
         "tsc:w": "tsc -w",
         "lite": "lite-server",
-        "scss": "node-sass --output-style compressed -r content/styles/ -o content/styles/",
-        "scss:w": "node-sass --output-style compressed -r -w content/styles/ -o content/styles/",
-        "start": "concurrent \"npm run scss:w\" \"npm run lite\" "
+        "start": "concurrent \"npm run tsc:w\" \"npm run lite\" "
     },
     "repository":
     {
@@ -37,8 +37,7 @@
     "devDependencies":
     {
         "concurrently": "^1.0.0",
-        "lite-server": "^1.3.1",
-        "node-sass": "^3.4.2",
-        "typescript": "^1.7.5"
+        "typescript": "^1.7.5",
+        "rimraf": "~2.5.1"
     }
 }
