@@ -8,4 +8,4 @@ typings.json
 *.map
 *.log
 !*.d.ts
-/bundle/ng2-error-handling.dev.d.ts
+/bundle/ng2-authentication.dev.d.ts
