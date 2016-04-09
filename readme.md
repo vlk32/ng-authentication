@@ -1,3 +1,4 @@
-# Angular 2 module for authorization
+# Angular 2 module for http error handling
 
-General module for angular 2 authorization and authentification
+Angular 2 module used for handling http api error handling
+
