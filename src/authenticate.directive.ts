@@ -47,11 +47,14 @@ export class AuthenticateDirective implements OnInit, OnDestroy
             .getUserIdentity()
             .then(userIdentity =>
             {
-                this._viewContainer.clear();
-                
-                if(userIdentity.permissions.indexOf(this.permission) > -1)
+                if(userIdentity)
                 {
-                    this._viewContainer.createEmbeddedView(this._template);
+                    this._viewContainer.clear();
+                
+                    if(userIdentity.permissions.indexOf(this.permission) > -1)
+                    {
+                        this._viewContainer.createEmbeddedView(this._template);
+                    }
                 }
             });
 
@@ -59,13 +62,16 @@ export class AuthenticateDirective implements OnInit, OnDestroy
             .authenticationChanged
             .subscribe(userIdentity =>
             {
-                this._viewContainer.clear();
-                
-                if(userIdentity.permissions.indexOf(this.permission) > -1)
+                if(userIdentity)
                 {
-                    this._viewContainer.createEmbeddedView(this._template);
+                    this._viewContainer.clear();
+                
+                    if(userIdentity.permissions.indexOf(this.permission) > -1)
+                    {
+                        this._viewContainer.createEmbeddedView(this._template);
+                    }
                 }
-            });
+            }, err => {});
     }
     
     //######################### public methods - implementation of OnDestroy #########################

@@ -228,17 +228,20 @@ export function Authenticate(permission: string): ClassDecorator
                 })
                 .then(userData =>
                 {
-                    if(userData.permissions.indexOf(permission) < 0 && userData.isAuthenticated)
+                    if(userData)
                     {
-                        authenticationServiceObj.showAccessDenied();
-                        
-                        return;
-                    }
-                    else if(userData.permissions.indexOf(permission) < 0 && !userData.isAuthenticated && !authenticationServiceObj.isLoginPage())
-                    {
-                        authenticationServiceObj.showAuthPage();
-                        
-                        return;
+                        if(userData.permissions.indexOf(permission) < 0 && userData.isAuthenticated)
+                        {
+                            authenticationServiceObj.showAccessDenied();
+                            
+                            return;
+                        }
+                        else if(userData.permissions.indexOf(permission) < 0 && !userData.isAuthenticated && !authenticationServiceObj.isLoginPage())
+                        {
+                            authenticationServiceObj.showAuthPage();
+                            
+                            return;
+                        }
                     }
                     
                     originalOnInit.call(this);
