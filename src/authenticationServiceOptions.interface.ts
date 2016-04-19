@@ -20,7 +20,6 @@ export interface AuthenticationServiceOptions
      */
     login(accessToken: AccessToken): Observable<any>;
     
-    
     /**
      * Gets indicatio whether current state of app is displaying login page
      * @returns boolean
