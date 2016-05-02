@@ -6,6 +6,8 @@ import {isBlank, isFunction, isPresent} from 'angular2/src/facade/lang';
 import {Observable} from 'rxjs/Observable';
 import {Observer} from 'rxjs/Observer';
 import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/empty';
 
 /**
  * Instance of created authentication service
