@@ -1,6 +1,6 @@
-import {Directive, TemplateRef, ViewContainerRef, OnInit, Input, OnDestroy} from 'angular2/core';
+import {Directive, TemplateRef, ViewContainerRef, OnInit, Input, OnDestroy} from '@angular/core';
 import {AuthenticationService} from './authentication.service';
-import {isBlank} from 'angular2/src/facade/lang';
+import {isBlank} from '@angular/core/src/facade/lang';
 import {Subscription} from 'rxjs/Subscription';
 
 @Directive(
@@ -25,7 +25,7 @@ export class AuthenticateDirective implements OnInit, OnDestroy
     public permission: string;
     
     //######################### constructor #########################
-    constructor(private _template: TemplateRef,
+    constructor(private _template: TemplateRef<any>,
                 private _viewContainer: ViewContainerRef,
                 private _authService: AuthenticationService)
     {

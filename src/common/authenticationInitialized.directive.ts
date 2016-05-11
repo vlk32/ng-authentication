@@ -1,4 +1,4 @@
-import {Directive, TemplateRef, ViewContainerRef, OnInit} from 'angular2/core';
+import {Directive, TemplateRef, ViewContainerRef, OnInit} from '@angular/core';
 import {AuthenticationService} from './authentication.service';
 
 @Directive(
@@ -15,7 +15,7 @@ export class AuthenticationInitializedDirective implements OnInit
     private _isInitialized: boolean = false;
     
     //######################### constructor #########################
-    constructor(private _template: TemplateRef,
+    constructor(private _template: TemplateRef<any>,
                 private _viewContainer: ViewContainerRef,
                 private _authService: AuthenticationService)
     {

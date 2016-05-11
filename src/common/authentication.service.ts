@@ -1,8 +1,8 @@
-import {Injectable, Inject, OpaqueToken, provide, Provider} from 'angular2/core';
+import {Injectable, Inject, OpaqueToken, provide, Provider} from '@angular/core';
 import {UserIdentity} from './userIdentity';
 import {AuthenticationServiceOptions, AUTHENTICATION_SERVICE_OPTIONS} from './authenticationServiceOptions.interface';
 import {AccessToken} from './accessToken';
-import {isBlank, isFunction, isPresent} from 'angular2/src/facade/lang';
+import {isBlank, isFunction, isPresent} from '@angular/core/src/facade/lang';
 import {Observable} from 'rxjs/Observable';
 import {Observer} from 'rxjs/Observer';
 import {Subject} from 'rxjs/Subject';
