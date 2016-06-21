@@ -10,11 +10,6 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/empty';
 
 /**
- * Instance of created authentication service
- */
-var authenticationServiceObj: AuthenticationService = null;
-
-/**
  * Authentication service managing authentication
  */
 @Injectable()
@@ -35,7 +30,7 @@ export class AuthenticationService
     /**
      * Subject used for indicating authenticationChanged
      */
-    private _authenticationChangedSubject: Subject<UserIdentity> = new Subject();
+    private _authenticationChangedSubject: Subject<UserIdentity> = new Subject<UserIdentity>();
 
     //######################### public properties #########################
 
@@ -167,9 +162,9 @@ export class AuthenticationService
      * Gets indicatio whether current state of app is displaying login page
      * @returns boolean
      */
-    public isLoginPage(): boolean
+    public isAuthPage(): boolean
     {
-        return this._options.isLoginPage();
+        return this._options.isAuthPage();
     }
 }
 
@@ -184,72 +179,14 @@ export const AUTHENTICATION_SERVICE_PROVIDER = provide(AuthenticationService,
                                                           isBlank(options.getUserIdentity) || !isFunction(options.getUserIdentity) ||
                                                           isBlank(options.login) || !isFunction(options.login) ||
                                                           isBlank(options.logout) || !isFunction(options.logout) ||
-                                                          isBlank(options.isLoginPage) || !isFunction(options.isLoginPage) ||
+                                                          isBlank(options.isAuthPage) || !isFunction(options.isAuthPage) ||
                                                           isBlank(options.showAccessDenied) || !isFunction(options.showAccessDenied) ||
                                                           isBlank(options.showAuthPage) || !isFunction(options.showAuthPage))
                                                        {
                                                            throw new Error("Options must be set and must implement AuthenticationServiceOptions");
                                                        }
 
-                                                       authenticationServiceObj = new AuthenticationService(options);
-
-                                                       return authenticationServiceObj;
+                                                       return new AuthenticationService(options);
                                                    },
                                                    deps: [AUTHENTICATION_SERVICE_OPTIONS]
                                                });
-
-/**
- * Used for authentication of component
- * @param  {string} permission Name of requested permission, that is used for displaying of component
- * @returns ClassDecorator
- */
-export function Authenticate(permission: string): ClassDecorator
-{
-    return function <TFunction extends Function> (target: TFunction): TFunction
-    {
-        var component: any = target;
-        var originalOnInit = () => {};
-
-        if(isPresent(component.prototype.ngOnInit))
-        {
-            originalOnInit = component.prototype.ngOnInit;
-        }
-        
-        component.prototype.ngOnInit = function()
-        {
-            if(isBlank(authenticationServiceObj))
-            {
-                throw new Error("Authentication service was not initialized before first use.");
-            }
-            
-            authenticationServiceObj
-                .getUserIdentity()
-                .catch(error =>
-                {
-                    console.error("Unexpected error in Authenticate!");
-                })
-                .then(userData =>
-                {
-                    if(userData)
-                    {
-                        if(userData.permissions.indexOf(permission) < 0 && userData.isAuthenticated)
-                        {
-                            authenticationServiceObj.showAccessDenied();
-                            
-                            return;
-                        }
-                        else if(userData.permissions.indexOf(permission) < 0 && !userData.isAuthenticated && !authenticationServiceObj.isLoginPage())
-                        {
-                            authenticationServiceObj.showAuthPage();
-                            
-                            return;
-                        }
-                    }
-                    
-                    originalOnInit.call(this);
-                });
-        };
-        
-        return target;
-    };
-}

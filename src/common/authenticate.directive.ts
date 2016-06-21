@@ -40,7 +40,7 @@ export class AuthenticateDirective implements OnInit, OnDestroy
     {
         if(isBlank(this.permission))
         {
-            throw new Error("You must specify 'authPermission'.");
+            throw new Error("You must specify 'authenticate' attribute value.");
         }
 
         this._authService
