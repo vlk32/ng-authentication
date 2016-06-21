@@ -5,9 +5,9 @@ import {Subscription} from 'rxjs/Subscription';
 
 @Directive(
 {
-    selector: "[authenticate]"
+    selector: "[authorize]"
 })
-export class AuthenticateDirective implements OnInit, OnDestroy
+export class AuthorizeDirective implements OnInit, OnDestroy
 {
     //######################### private fields #########################
 
@@ -21,7 +21,7 @@ export class AuthenticateDirective implements OnInit, OnDestroy
     /**
      * Name of permission that is requested for displaying element
      */
-    @Input("authenticate")
+    @Input("authorize")
     public permission: string;
     
     //######################### constructor #########################
@@ -40,7 +40,7 @@ export class AuthenticateDirective implements OnInit, OnDestroy
     {
         if(isBlank(this.permission))
         {
-            throw new Error("You must specify 'authenticate' attribute value.");
+            throw new Error("You must specify 'authorize' attribute value.");
         }
 
         this._authService
