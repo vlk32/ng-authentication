@@ -37,6 +37,9 @@ export class AuthGuard implements CanActivate
                 {
                     console.error("Unexpected error in AuthGuard!");
                     observer.next(false);
+                    observer.complete();
+                        
+                    return;
                 })
                 .then(userData =>
                 {
@@ -46,22 +49,28 @@ export class AuthGuard implements CanActivate
                         {
                             this.authService.showAccessDenied();
                             observer.next(false);
-                            
+                            observer.complete();
+                        
                             return;
                         }
                         else if(userData.permissions.indexOf(permission) < 0 && !userData.isAuthenticated && !this.authService.isAuthPage())
                         {
                             this.authService.showAuthPage();
                             observer.next(false);
+                            observer.complete();
                             
                             return;
                         }
 
                         observer.next(true);
+                        observer.complete();
+
+                        return;
                     }
 
                     console.warn("No UserData in AuthGuard!");
                     observer.next(false);
+                    observer.complete();
                 });
         });
     }
