@@ -2,7 +2,7 @@ import {Injectable, Inject, OpaqueToken, provide, Provider} from '@angular/core'
 import {UserIdentity} from './userIdentity';
 import {AuthenticationServiceOptions, AUTHENTICATION_SERVICE_OPTIONS} from './authenticationServiceOptions.interface';
 import {AccessToken} from './accessToken';
-import {isBlank, isFunction, isPresent} from '@angular/core/src/facade/lang';
+import {isBlank, isFunction, isPresent, isArray} from '@angular/core/src/facade/lang';
 import {Observable} from 'rxjs/Observable';
 import {Observer} from 'rxjs/Observer';
 import {Subject} from 'rxjs/Subject';
@@ -54,6 +54,38 @@ export class AuthenticationService
     }
 
     //######################### public methods #########################
+    
+    /**
+     * Tests whether is used authorized for specified permission
+     * @param  {string} permission Permission name that is tested
+     * @returns Promise<boolean> True if user is authorized otherwise false
+     */
+    public isAuthorized(permission: string) : Promise<boolean>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            this.getUserIdentity()
+                .then((userIdentity: UserIdentity) =>
+                {
+                    if(isArray(userIdentity.permissions))
+                    {
+                        if(userIdentity.permissions.indexOf(permission) > -1)
+                        {
+                            resolve(true);
+                        }
+                        else
+                        {
+                            resolve(false);
+                        }
+                    }
+                    else
+                    {
+                        resolve(false);
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
 
     /**
      * Gets user identity

@@ -1,6 +1,7 @@
 import {Directive, TemplateRef, ViewContainerRef, OnInit, Input, OnDestroy} from '@angular/core';
 import {AuthenticationService} from './authentication.service';
-import {isBlank} from '@angular/core/src/facade/lang';
+import {isBlank, isArray} from '@angular/core/src/facade/lang';
+import {UserIdentity} from './userIdentity';
 import {Subscription} from 'rxjs/Subscription';
 
 @Directive(
@@ -22,7 +23,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
      * Name of permission that is requested for displaying element
      */
     @Input("authorize")
-    public permission: string;
+    public permission: string | string[];
     
     //######################### constructor #########################
     constructor(private _template: TemplateRef<any>,
@@ -47,30 +48,14 @@ export class AuthorizeDirective implements OnInit, OnDestroy
             .getUserIdentity()
             .then(userIdentity =>
             {
-                if(userIdentity)
-                {
-                    this._viewContainer.clear();
-                
-                    if(userIdentity.permissions.indexOf(this.permission) > -1)
-                    {
-                        this._viewContainer.createEmbeddedView(this._template);
-                    }
-                }
+                this._renderIfPermission(userIdentity);
             });
 
         this._subscription = this._authService
             .authenticationChanged
             .subscribe(userIdentity =>
             {
-                if(userIdentity)
-                {
-                    this._viewContainer.clear();
-                
-                    if(userIdentity.permissions.indexOf(this.permission) > -1)
-                    {
-                        this._viewContainer.createEmbeddedView(this._template);
-                    }
-                }
+                this._renderIfPermission(userIdentity);
             }, err => {});
     }
     
@@ -85,6 +70,38 @@ export class AuthorizeDirective implements OnInit, OnDestroy
         {
             this._subscription.unsubscribe();
             this._subscription = null;
+        }
+    }
+
+    //######################### private methods #########################
+
+    /**
+     * Renders content if user has permissions
+     */
+    private _renderIfPermission(userIdentity: UserIdentity)
+    {
+        if(userIdentity)
+        {
+            this._viewContainer.clear();
+        
+            if(isArray(this.permission))
+            {
+                let arrayPermission: string[] = <string[]>this.permission;
+
+                if(arrayPermission.map(perm => userIdentity.permissions.indexOf(perm) > -1).indexOf(true) > -1)
+                {
+                    this._viewContainer.createEmbeddedView(this._template);
+                }
+            }
+            else
+            {
+                let stringPermission: string = <string>this.permission;
+
+                if(userIdentity.permissions.indexOf(stringPermission) > -1)
+                {
+                    this._viewContainer.createEmbeddedView(this._template);
+                }
+            }
         }
     }
 }
