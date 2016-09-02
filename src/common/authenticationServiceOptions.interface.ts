@@ -1,4 +1,4 @@
-import {OpaqueToken, provide, Provider} from '@angular/core';
+import {OpaqueToken} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {UserIdentity} from './userIdentity';
 import {AccessToken} from './accessToken';

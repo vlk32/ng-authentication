@@ -16,10 +16,9 @@ export interface AuthorizationDecoratedComponent
  */
 export function Authorize(permission: string): ClassDecorator
 {
-    return function <TFunction extends Function> (target: TFunction): TFunction
+    return function <TFunction extends AuthorizationDecoratedComponent> (target: TFunction): TFunction
     {
-        let component: AuthorizationDecoratedComponent = <any>target;
-        component.permissionName = permission;
+        target.permissionName = permission;
 
         return target;
     };

@@ -1,4 +1,4 @@
-import {Injectable, Inject, OpaqueToken, provide, Provider} from '@angular/core';
+import {Injectable, Inject, OpaqueToken, FactoryProvider} from '@angular/core';
 import {UserIdentity} from './userIdentity';
 import {AuthenticationServiceOptions, AUTHENTICATION_SERVICE_OPTIONS} from './authenticationServiceOptions.interface';
 import {AccessToken} from './accessToken';
@@ -203,22 +203,23 @@ export class AuthenticationService
 /**
  * Provider used for injecting authentication service
  */
-export const AUTHENTICATION_SERVICE_PROVIDER = provide(AuthenticationService,
-                                               {
-                                                   useFactory: (options: AuthenticationServiceOptions) =>
-                                                   {
-                                                       if(isBlank(options) ||
-                                                          isBlank(options.getUserIdentity) || !isFunction(options.getUserIdentity) ||
-                                                          isBlank(options.login) || !isFunction(options.login) ||
-                                                          isBlank(options.logout) || !isFunction(options.logout) ||
-                                                          isBlank(options.isAuthPage) || !isFunction(options.isAuthPage) ||
-                                                          isBlank(options.showAccessDenied) || !isFunction(options.showAccessDenied) ||
-                                                          isBlank(options.showAuthPage) || !isFunction(options.showAuthPage))
-                                                       {
-                                                           throw new Error("Options must be set and must implement AuthenticationServiceOptions");
-                                                       }
+export const AUTHENTICATION_SERVICE_PROVIDER: FactoryProvider =
+{ 
+    provide: AuthenticationService,
+    useFactory: (options: AuthenticationServiceOptions) =>
+    {
+        if(isBlank(options) ||
+           isBlank(options.getUserIdentity) || !isFunction(options.getUserIdentity) ||
+           isBlank(options.login) || !isFunction(options.login) ||
+           isBlank(options.logout) || !isFunction(options.logout) ||
+           isBlank(options.isAuthPage) || !isFunction(options.isAuthPage) ||
+           isBlank(options.showAccessDenied) || !isFunction(options.showAccessDenied) ||
+           isBlank(options.showAuthPage) || !isFunction(options.showAuthPage))
+        {
+            throw new Error("Options must be set and must implement AuthenticationServiceOptions");
+        }
 
-                                                       return new AuthenticationService(options);
-                                                   },
-                                                   deps: [AUTHENTICATION_SERVICE_OPTIONS]
-                                               });
+        return new AuthenticationService(options);
+    },
+    deps: [AUTHENTICATION_SERVICE_OPTIONS]
+};
