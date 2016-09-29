@@ -1,15 +1,14 @@
 {
     "name": "@ng2/authentication",
-    "version": "1.5.0",
+    "version": "2.0.0",
     "description": "Angular 2 module used for handling authentication",
-    "main": "index.js",
-    "typings": "index.d.ts",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
     "scripts":
     {
-        "prebuild": "typings install",
         "build": "npm run tsc",
-        "clean": "rimraf ./*.d.ts ./index.js ./index.dev.js ./index.min.js ./*.map ./*.log ./common",
-        "clean:deps": "rimraf ./node_modules ./typings",
+        "clean": "rimraf dist",
+        "clean:deps": "rimraf node_modules",
         "clean:all": "npm run clean && npm run clean:deps",
         "tsc": "tsc",
         "tsc:w": "tsc -w --sourceMap",
@@ -17,9 +16,9 @@
         "prepublish": "npm run bundle:package",
         "postpublish": "npm run clean",
         "republish": "npm publish --force",
-        "bundle": "tsc --outFile ./index.dev.js",
-        "bundle:update": "nab ./index.dev.js && uglifyjs -o ./index.min.js -- ./index.dev.js",
-        "bundle:package": "npm run clean && npm run build && npm run bundle && npm run bundle:update",
+        "bundle": "webpack",
+        "bundle:min": "webpack --env.minify",
+        "bundle:package": "npm run clean && npm run build && npm run bundle && npm run bundle:min",
         "deploy-stable": "npp -b",
         "deploy-next": "npp -p -b -s \"beta\" -t \"next\""
     },
@@ -32,12 +31,12 @@
     "license": "MIT",
     "dependencies":
     {
-        "@angular/core": "~2.0.0",
-        "@angular/compiler": "~2.0.0",
-        "@angular/common": "~2.0.0",
-        "@angular/platform-browser": "~2.0.0",
-        "@angular/platform-browser-dynamic": "~2.0.0",
-        "@angular/router": "~3.0.0",
+        "@angular/core": "~2.0.1",
+        "@angular/common": "~2.0.1",
+        "@angular/compiler": "~2.0.1",
+        "@angular/platform-browser": "~2.0.1",
+        "@angular/platform-browser-dynamic": "~2.0.1",
+        "@angular/router": "~3.0.1",
         "core-js": "~2.4.1",
         "reflect-metadata": "~0.1.3",
         "zone.js": "~0.6.23",
@@ -46,10 +45,8 @@
     "devDependencies":
     {
         "rimraf": "~2.5.4",
-        "typescript": "1.8.10",
-        "typings":"~1.3.2",
-        "uglify-js": "~2.6.2",
-        "npm-publish-package": "~1.2.0",
-        "npm-angular2-bundle": "~1.0.1"
+        "typescript": "2.0.3",
+        "webpack": "2.1.0-beta.25",
+        "npm-publish-package": "~1.2.0"
     }
 }
