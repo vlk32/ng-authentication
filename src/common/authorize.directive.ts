@@ -1,6 +1,6 @@
 import {Directive, TemplateRef, ViewContainerRef, OnInit, Input, OnDestroy} from '@angular/core';
 import {AuthenticationService} from './authentication.service';
-import {isBlank, isArray} from '@angular/core/src/facade/lang';
+import {isBlank} from '@angular/core/src/facade/lang';
 import {UserIdentity} from './userIdentity';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -84,7 +84,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
         {
             this._viewContainer.clear();
         
-            if(isArray(this.permission))
+            if(Array.isArray(this.permission))
             {
                 let arrayPermission: string[] = <string[]>this.permission;
 
