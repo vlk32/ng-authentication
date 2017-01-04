@@ -1,4 +1,5 @@
 import {Directive, TemplateRef, ViewContainerRef, OnInit, Input, OnDestroy} from '@angular/core';
+import {isString, isBoolean} from '@ng2/common';
 import {AuthenticationService} from './authentication.service';
 import {isBlank} from '@angular/core/src/facade/lang';
 import {UserIdentity} from './userIdentity';
@@ -24,6 +25,18 @@ export class AuthorizeDirective implements OnInit, OnDestroy
      */
     @Input("authorize")
     public permission: string | string[];
+
+    /**
+     * Indication that AND condition should be used instead of OR condition if multiple permissions are provided
+     */
+    @Input("authorizeAndCondition")
+    public andCondition: boolean = false;
+
+    /**
+     * Indication that provided string is set of loggical operations among permission names, if this is true andCondition is ignored
+     */
+    @Input("authorizeConditionString")
+    public conditionString: boolean = false;
     
     //######################### constructor #########################
     constructor(private _template: TemplateRef<any>,
@@ -42,6 +55,21 @@ export class AuthorizeDirective implements OnInit, OnDestroy
         if(isBlank(this.permission))
         {
             throw new Error("You must specify 'authorize' attribute value.");
+        }
+
+        if(!isBoolean(this.andCondition))
+        {
+            throw new Error("Parameter 'andCondition' must be boolean value!");
+        }
+
+        if(!isBoolean(this.conditionString))
+        {
+            throw new Error("Parameter 'conditionString' must be boolean value!");
+        }
+
+        if(isString(this.permission) && this.permission.indexOf(",") > -1)
+        {
+            this.permission = this.permission.split(",").map(itm => itm.trim());
         }
 
         this._authService
@@ -80,19 +108,38 @@ export class AuthorizeDirective implements OnInit, OnDestroy
      */
     private _renderIfPermission(userIdentity: UserIdentity)
     {
+        if(!isString(this.permission) && !Array.isArray(this.permission))
+        {
+            throw new Error("Invalid argument type! Permission must be string or array of strings.");
+        }
+
         if(userIdentity)
         {
             this._viewContainer.clear();
         
+            //Multiple conditions
             if(Array.isArray(this.permission))
             {
                 let arrayPermission: string[] = <string[]>this.permission;
 
-                if(arrayPermission.map(perm => userIdentity.permissions.indexOf(perm) > -1).indexOf(true) > -1)
+                if(this.andCondition)
                 {
-                    this._viewContainer.createEmbeddedView(this._template);
+                    //AND Condition
+                    if(arrayPermission.map(perm => userIdentity.permissions.indexOf(perm) > -1).every(itm => itm === true))
+                    {
+                        this._viewContainer.createEmbeddedView(this._template);
+                    }
+                }
+                else
+                {
+                    //OR Condition
+                    if(arrayPermission.map(perm => userIdentity.permissions.indexOf(perm) > -1).indexOf(true) > -1)
+                    {
+                        this._viewContainer.createEmbeddedView(this._template);
+                    }
                 }
             }
+            //Single condition
             else
             {
                 let stringPermission: string = <string>this.permission;
