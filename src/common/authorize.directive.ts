@@ -1,7 +1,6 @@
 import {Directive, TemplateRef, ViewContainerRef, OnInit, Input, OnDestroy} from '@angular/core';
-import {isString, isBoolean} from '@ng2/common';
+import {isString, isBoolean, isBlank} from '@anglr/common';
 import {AuthenticationService} from './authentication.service';
-import {isBlank} from '@angular/core/src/facade/lang';
 import {UserIdentity} from './userIdentity';
 import {Subscription} from 'rxjs/Subscription';
 
