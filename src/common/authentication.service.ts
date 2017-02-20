@@ -13,14 +13,14 @@ import 'rxjs/add/observable/empty';
  * Authentication service managing authentication
  */
 @Injectable()
-export class AuthenticationService
+export class AuthenticationService<TUserInfo>
 {
     //######################### private fields #########################
 
     /**
      * Authentication promise that was used for authentication
      */
-    private _authenticationPromise: Promise<UserIdentity>;
+    private _authenticationPromise: Promise<UserIdentity<TUserInfo>>;
 
     /**
      * Resolved function for isInitialized
@@ -30,7 +30,7 @@ export class AuthenticationService
     /**
      * Subject used for indicating authenticationChanged
      */
-    private _authenticationChangedSubject: Subject<UserIdentity> = new Subject<UserIdentity>();
+    private _authenticationChangedSubject: Subject<UserIdentity<TUserInfo>> = new Subject<UserIdentity<TUserInfo>>();
 
     //######################### public properties #########################
 
@@ -42,19 +42,19 @@ export class AuthenticationService
     /**
      * Gets observable that indicates when authentication has changed
      */
-    public get authenticationChanged(): Observable<UserIdentity>
+    public get authenticationChanged(): Observable<UserIdentity<TUserInfo>>
     {
         return this._authenticationChangedSubject.asObservable();
     }
 
     //######################### constructor #########################
-    constructor(private _options: AuthenticationServiceOptions)
+    constructor(private _options: AuthenticationServiceOptions<TUserInfo>)
     {
         this.isInitialized = new Promise(resolve => this._isInitializedResolver = resolve);
     }
 
     //######################### public methods #########################
-    
+
     /**
      * Tests whether is used authorized for specified permission
      * @param  {string} permission Permission name that is tested
@@ -65,7 +65,7 @@ export class AuthenticationService
         return new Promise((resolve, reject) =>
         {
             this.getUserIdentity()
-                .then((userIdentity: UserIdentity) =>
+                .then((userIdentity: UserIdentity<TUserInfo>) =>
                 {
                     if(isArray(userIdentity.permissions))
                     {
@@ -92,7 +92,7 @@ export class AuthenticationService
      * @param  {boolean} refresh? Indication that server get user identity should be called, otherwise cached response will be used
      * @returns Promise
      */
-    public getUserIdentity(refresh?: boolean): Promise<UserIdentity>
+    public getUserIdentity(refresh?: boolean): Promise<UserIdentity<TUserInfo>>
     {
         if(refresh === true)
         {
@@ -112,7 +112,7 @@ export class AuthenticationService
                 {
                     reject(error);
                     this._isInitializedResolver(true);
-                    
+
                     return Observable.empty();
                 })
                 .subscribe(itm =>
@@ -173,7 +173,7 @@ export class AuthenticationService
                 });
         });
     }
-    
+
     /**
      * Redirects current page to authentication page
      */
@@ -181,7 +181,7 @@ export class AuthenticationService
     {
         this._options.showAuthPage();
     }
-    
+
     /**
      * Redirects current page to access denied page
      */
@@ -189,7 +189,7 @@ export class AuthenticationService
     {
         this._options.showAccessDenied();
     }
-    
+
     /**
      * Gets indicatio whether current state of app is displaying login page
      * @returns boolean
@@ -206,7 +206,7 @@ export class AuthenticationService
 export const AUTHENTICATION_SERVICE_PROVIDER: FactoryProvider =
 { 
     provide: AuthenticationService,
-    useFactory: (options: AuthenticationServiceOptions) =>
+    useFactory: (options: AuthenticationServiceOptions<any>) =>
     {
         if(isBlank(options) ||
            isBlank(options.getUserIdentity) || !isFunction(options.getUserIdentity) ||
