@@ -12,7 +12,7 @@ import {Observer} from 'rxjs/Observer';
 export class AuthGuard implements CanActivate
 {
     //######################### constructor #########################
-    constructor(private authService: AuthenticationService, private router: Router)
+    constructor(private authService: AuthenticationService<any>, private router: Router)
     {
     }
 

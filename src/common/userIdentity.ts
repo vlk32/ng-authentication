@@ -1,7 +1,7 @@
 /**
  * Information about user in accessing system
  */
-export class UserIdentity
+export class UserIdentity<TUserInfo>
 {
     //######################### public properties #########################
     
@@ -29,4 +29,9 @@ export class UserIdentity
      * Array of user permissions
      */
     public permissions: string[] = [];
+
+    /**
+     * Additional information carried with user identity
+     */
+    public additionalInfo: TUserInfo;
 }

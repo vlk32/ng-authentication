@@ -41,7 +41,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
     //######################### constructor #########################
     constructor(private _template: TemplateRef<any>,
                 private _viewContainer: ViewContainerRef,
-                private _authService: AuthenticationService)
+                private _authService: AuthenticationService<any>)
     {
     }
 
@@ -106,7 +106,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
     /**
      * Renders content if user has permissions
      */
-    private _renderIfPermission(userIdentity: UserIdentity)
+    private _renderIfPermission(userIdentity: UserIdentity<any>)
     {
         if(!isString(this.permission) && !Array.isArray(this.permission))
         {
