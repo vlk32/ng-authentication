@@ -1,12 +1,7 @@
-import {OpaqueToken, ClassProvider, Type} from '@angular/core';
+import {InjectionToken, ClassProvider, Type} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {UserIdentity} from './userIdentity';
 import {AccessToken} from './accessToken';
-
-/**
- * Authentication options token used for injecting into authentication service
- */
-export const AUTHENTICATION_SERVICE_OPTIONS: OpaqueToken = new OpaqueToken("AuthenticationServiceOptions");
 
 /**
  * Options for authentication service
@@ -48,6 +43,11 @@ export interface AuthenticationServiceOptions<TUserInfo>
      */
     showAccessDenied(): void;
 }
+
+/**
+ * Authentication options token used for injecting into authentication service
+ */
+export const AUTHENTICATION_SERVICE_OPTIONS: InjectionToken<AuthenticationServiceOptions<any>> = new InjectionToken<AuthenticationServiceOptions<any>>("AuthenticationServiceOptions");
 
 /**
  * Creates provider for AuthenticationServiceOptions<TUserInfo>

@@ -1,4 +1,4 @@
-import {Injectable, Inject, OpaqueToken, FactoryProvider} from '@angular/core';
+import {Injectable, Inject, FactoryProvider} from '@angular/core';
 import {UserIdentity} from './userIdentity';
 import {AuthenticationServiceOptions, AUTHENTICATION_SERVICE_OPTIONS} from './authenticationServiceOptions.interface';
 import {AccessToken} from './accessToken';
