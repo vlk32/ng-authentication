@@ -48,16 +48,3 @@ export interface AuthenticationServiceOptions<TUserInfo>
  * Authentication options token used for injecting into authentication service
  */
 export const AUTHENTICATION_SERVICE_OPTIONS: InjectionToken<AuthenticationServiceOptions<any>> = new InjectionToken<AuthenticationServiceOptions<any>>("AuthenticationServiceOptions");
-
-/**
- * Creates provider for AuthenticationServiceOptions<TUserInfo>
- * @param  {Type<AuthenticationServiceOptions<TUserInfo>>} providerType Registered type that must implement AuthenticationServiceOptions<TUserInfo>
- * @returns ClassProvider
- */
-export function provideAuthenticationServiceOptions<TUserInfo>(providerType: Type<AuthenticationServiceOptions<TUserInfo>>): ClassProvider
-{
-    return {
-        provide: AUTHENTICATION_SERVICE_OPTIONS,
-        useClass: providerType
-    };
-}

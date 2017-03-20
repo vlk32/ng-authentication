@@ -1,4 +1,7 @@
-export {AuthenticationServiceOptions, provideAuthenticationServiceOptions} from './common/authenticationServiceOptions.interface';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/empty';
+
+export {AuthenticationServiceOptions, AUTHENTICATION_SERVICE_OPTIONS} from './common/authenticationServiceOptions.interface';
 export {UserIdentity} from './common/userIdentity';
 export {AUTHENTICATION_SERVICE_PROVIDER, AuthenticationService} from './common/authentication.service';
 export {AuthGuard} from './common/auth.guard';
