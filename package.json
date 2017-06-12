@@ -1,13 +1,14 @@
 {
     "name": "@anglr/authentication",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "Angular module used for handling authentication",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
     "scripts":
     {
         "build": "npm run ngc",
-        "clean": "rimraf dist",
+        "postbuild": "copyfiles -u 2 dist/src/**/*.* dist && copyfiles -u 2 dist/testing/**/*.* testing && rimraf dist/src dist/dist dist/node_modules dist/testing",
+        "clean": "rimraf dist testing",
         "clean:deps": "rimraf node_modules",
         "clean:all": "npm run clean && npm run clean:deps",
         "ngc": "ngc",
@@ -29,21 +30,22 @@
     "license": "MIT",
     "dependencies":
     {
-        "@angular/core": "^4.0.0",
-        "@angular/common": "^4.0.0",
-        "@angular/router": "^4.0.0",
+        "@angular/core": "^4.2.0",
+        "@angular/common": "^4.2.0",
+        "@angular/router": "^4.2.0",
         "core-js": "~2.4.1",
-        "zone.js": "^0.8.5",
+        "zone.js": "^0.8.12",
         "rxjs": "^5.2.0",
         "@anglr/common": "^3.0.0"
     },
     "devDependencies":
     {
-        "@angular/compiler-cli": "^4.0.0",
-        "@angular/compiler": "^4.0.0",
+        "@angular/compiler-cli": "^4.2.0",
+        "@angular/compiler": "^4.2.0",
         "rimraf": "~2.6.1",
-        "typescript": "2.2.1",
-        "webpack": "2.3.2",
+        "copyfiles": "~1.2.0",
+        "typescript": "2.3.4",
+        "webpack": "2.6.1",
         "npm-publish-package": "~1.2.0"
     }
 }
