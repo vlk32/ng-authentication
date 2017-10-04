@@ -112,9 +112,10 @@ export class AuthenticationService<TUserInfo>
 
                     return Observable.empty();
                 })
-                .subscribe(itm =>
+                .subscribe((itm: UserIdentity<TUserInfo>) =>
                 {
                     success(itm);
+                    this._authenticationChangedSubject.next(itm);
                     this._isInitializedResolver(true);
                 });
         });
@@ -137,7 +138,6 @@ export class AuthenticationService<TUserInfo>
                     this.getUserIdentity(true)
                         .then(userIdentity =>
                         {
-                            this._authenticationChangedSubject.next(userIdentity);
                             observer.next(null);
                         });
                 }, error =>
@@ -161,7 +161,6 @@ export class AuthenticationService<TUserInfo>
                     this.getUserIdentity(true)
                         .then(userIdentity =>
                         {
-                            this._authenticationChangedSubject.next(userIdentity);
                             observer.next(null);
                         });
                 }, error =>

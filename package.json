@@ -1,11 +1,10 @@
 {
     "name": "@anglr/authentication",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "description": "Angular module used for handling authentication",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
-    "scripts":
-    {
+    "scripts": {
         "build": "npm run ngc",
         "postbuild": "copyfiles -u 2 dist/src/**/*.* dist && copyfiles -u 2 dist/testing/**/*.* testing && rimraf dist/src dist/dist dist/node_modules dist/testing",
         "clean": "rimraf dist testing",
@@ -19,7 +18,9 @@
         "bundle:min": "webpack --env.minify",
         "bundle:package": "npm run clean && npm run build && npm run bundle && npm run bundle:min",
         "deploy:stable": "npp -b",
-        "deploy:next": "npp -p -b -s \"beta\" -t \"next\""
+        "deploy:next": "npp -p -b -s \"beta\" -t \"next\"",
+        "deploy:stable:local": "npp -b --registry http://local:4873",
+        "deploy:next:local": "npp -p -b -s \"beta\" -t \"next\" --registry http://local:4873"
     },
     "keywords": [
         "angular",
@@ -28,8 +29,7 @@
     ],
     "author": "kukjevov",
     "license": "MIT",
-    "dependencies":
-    {
+    "dependencies": {
         "@angular/core": "^4.2.0",
         "@angular/common": "^4.2.0",
         "@angular/router": "^4.2.0",
@@ -38,8 +38,7 @@
         "rxjs": "^5.2.0",
         "@anglr/common": "^3.0.0"
     },
-    "devDependencies":
-    {
+    "devDependencies": {
         "@angular/compiler-cli": "^4.2.0",
         "@angular/compiler": "^4.2.0",
         "rimraf": "~2.6.1",
