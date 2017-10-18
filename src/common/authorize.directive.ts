@@ -1,4 +1,4 @@
-import {Directive, TemplateRef, ViewContainerRef, OnInit, Input, OnDestroy} from '@angular/core';
+import {Directive, TemplateRef, ViewContainerRef, OnInit, Input, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import {isString, isBoolean, isBlank} from '@anglr/common';
 import {AuthenticationService} from './authentication.service';
 import {UserIdentity} from './userIdentity';
@@ -40,7 +40,8 @@ export class AuthorizeDirective implements OnInit, OnDestroy
     //######################### constructor #########################
     constructor(private _template: TemplateRef<any>,
                 private _viewContainer: ViewContainerRef,
-                private _authService: AuthenticationService<any>)
+                private _authService: AuthenticationService<any>,
+                private _changeDetector: ChangeDetectorRef)
     {
     }
 
@@ -76,6 +77,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
             .then(userIdentity =>
             {
                 this._renderIfPermission(userIdentity);
+                this._changeDetector.detectChanges();
             });
 
         this._subscription = this._authService
@@ -83,6 +85,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
             .subscribe(userIdentity =>
             {
                 this._renderIfPermission(userIdentity);
+                this._changeDetector.detectChanges();
             }, err => {});
     }
     
