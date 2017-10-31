@@ -16,9 +16,10 @@ export interface AuthorizationDecoratedComponent
  */
 export function Authorize(permission: string)
 {
-    return function <TFunction extends AuthorizationDecoratedComponent> (target: TFunction): TFunction
+    return function <TFunction extends Function> (target: TFunction): TFunction
     {
-        target.permissionName = permission;
+        let typedTarget: AuthorizationDecoratedComponent = target as any;
+        typedTarget.permissionName = permission;
 
         return target;
     };
