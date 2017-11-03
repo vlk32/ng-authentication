@@ -8,7 +8,7 @@
         "build": "npm run ngc",
         "postbuild": "copyfiles -u 2 dist/src/**/*.* dist && copyfiles -u 2 dist/testing/**/*.* testing && rimraf dist/src dist/dist dist/node_modules dist/testing",
         "clean": "rimraf dist testing tests",
-        "clean:deps": "rimraf node_modules",
+        "clean:deps": "rimraf package-lock.json node_modules",
         "clean:all": "npm run clean && npm run clean:deps",
         "ngc": "ngc",
         "prepublishOnly": "npm run bundle",
