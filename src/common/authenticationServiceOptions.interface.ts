@@ -1,4 +1,4 @@
-import {InjectionToken, ClassProvider, Type} from '@angular/core';
+import {InjectionToken} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {UserIdentity} from './userIdentity';
 import {AccessToken} from './accessToken';

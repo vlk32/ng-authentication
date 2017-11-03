@@ -1,8 +1,9 @@
 import {Directive, TemplateRef, ViewContainerRef, OnInit, Input, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import {isString, isBoolean, isBlank} from '@anglr/common';
+import {Subscription} from 'rxjs/Subscription';
+
 import {AuthenticationService} from './authentication.service';
 import {UserIdentity} from './userIdentity';
-import {Subscription} from 'rxjs/Subscription';
 
 @Directive(
 {
@@ -15,7 +16,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
     /**
      * Subscription for changes in authentication
      */
-    private _subscription: Subscription = null;
+    private _subscription: Subscription|null = null;
 
     //######################### public properties - inputs #########################
 
@@ -86,7 +87,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
             {
                 this._renderIfPermission(userIdentity);
                 this._changeDetector.detectChanges();
-            }, err => {});
+            }, () => {});
     }
     
     //######################### public methods - implementation of OnDestroy #########################

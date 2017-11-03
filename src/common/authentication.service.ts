@@ -1,11 +1,14 @@
-import {Inject, FactoryProvider} from '@angular/core';
-import {UserIdentity} from './userIdentity';
-import {AuthenticationServiceOptions, AUTHENTICATION_SERVICE_OPTIONS} from './authenticationServiceOptions.interface';
-import {AccessToken} from './accessToken';
-import {isFunction, isArray, isBlank, isPresent} from '@anglr/common';
+import {FactoryProvider} from '@angular/core';
+import {isFunction, isArray, isBlank} from '@anglr/common';
 import {Observable} from 'rxjs/Observable';
 import {Observer} from 'rxjs/Observer';
 import {Subject} from 'rxjs/Subject';
+import {catchError} from 'rxjs/operators';
+import {empty} from 'rxjs/observable/empty';
+
+import {UserIdentity} from './userIdentity';
+import {AuthenticationServiceOptions, AUTHENTICATION_SERVICE_OPTIONS} from './authenticationServiceOptions.interface';
+import {AccessToken} from './accessToken';
 
 /**
  * Authentication service managing authentication
@@ -17,7 +20,7 @@ export class AuthenticationService<TUserInfo>
     /**
      * Authentication promise that was used for authentication
      */
-    private _authenticationPromise: Promise<UserIdentity<TUserInfo>>;
+    private _authenticationPromise: Promise<UserIdentity<TUserInfo>>|null;
 
     /**
      * Resolved function for isInitialized
@@ -105,13 +108,13 @@ export class AuthenticationService<TUserInfo>
         {
             this._options
                 .getUserIdentity()
-                .catch(error =>
-                {
-                    reject(error);
-                    this._isInitializedResolver(true);
-
-                    return Observable.empty();
-                })
+                .pipe(catchError(error =>
+                      {
+                          reject(error);
+                          this._isInitializedResolver(true);
+  
+                          return empty<UserIdentity<TUserInfo>>();
+                      }))
                 .subscribe((itm: UserIdentity<TUserInfo>) =>
                 {
                     success(itm);
@@ -133,10 +136,10 @@ export class AuthenticationService<TUserInfo>
         return Observable.create((observer: Observer<any>) =>
         {
             this._options.login(accessToken)
-                .subscribe(result =>
+                .subscribe(() =>
                 {
                     this.getUserIdentity(true)
-                        .then(userIdentity =>
+                        .then(() =>
                         {
                             observer.next(null);
                         });
@@ -156,10 +159,10 @@ export class AuthenticationService<TUserInfo>
         return Observable.create((observer: Observer<any>) =>
         {
             this._options.logout()
-                .subscribe(result =>
+                .subscribe(() =>
                 {
                     this.getUserIdentity(true)
-                        .then(userIdentity =>
+                        .then(() =>
                         {
                             observer.next(null);
                         });
