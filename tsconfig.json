@@ -27,7 +27,7 @@
             }
         ]
     },
-    "exclude": 
+    "exclude":
     [
         "node_modules",
         "dist",
@@ -37,6 +37,9 @@
     ],
     "angularCompilerOptions": 
     {
-        "skipMetadataEmit" : false
+        "skipMetadataEmit": false,
+        "strictMetadataEmit": true,
+        "fullTemplateTypeCheck": true,
+        "preserveWhitespaces": false
     }
 }
