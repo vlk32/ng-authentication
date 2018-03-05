@@ -6,3 +6,4 @@ export {Authorize} from './common/authorize.decorator';
 export {AuthorizeDirective} from './common/authorize.directive';
 export {AccessToken} from './common/accessToken';
 export {AuthorizationModule} from './modules/authorization.module';
+export * from './authInterceptor/authInterceptor';

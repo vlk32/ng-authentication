@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 4.0.3
+ - moved `AuthInterceptor` from `@anglr/http-extensions`
+ - `AuthInterceptor` now using `HttpRequestIgnoredInterceptorId`
+
 ## Version 4.0.2
  - returned typescript version back to 2.4.2 and removed distJit
 
