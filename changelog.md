@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 4.0.4
+ - `AuthInterceptor` now handles also `isAuthenticated` rejection
+
 ## Version 4.0.3
  - moved `AuthInterceptor` from `@anglr/http-extensions`
  - `AuthInterceptor` now using `HttpRequestIgnoredInterceptorId`

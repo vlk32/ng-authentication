@@ -104,7 +104,8 @@ export class AuthInterceptor implements HttpInterceptor
                             observer.complete();
 
                             return;
-                        });
+                        })
+                        .catch(() => observer.complete());
 
                     return;
                 }
