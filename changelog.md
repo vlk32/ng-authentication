@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 4.0.5
+ - `AuthorizeDirective` now supports condition expressions if `conditionString` is set to true
+
 ## Version 4.0.4
  - `AuthInterceptor` now handles also `isAuthenticated` rejection
 

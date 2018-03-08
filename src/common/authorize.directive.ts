@@ -145,11 +145,30 @@ export class AuthorizeDirective implements OnInit, OnDestroy
             //Single condition
             else
             {
-                let stringPermission: string = <string>this.permission;
-
-                if(userIdentity.permissions.indexOf(stringPermission) > -1)
+                //Condition string
+                if(this.conditionString)
                 {
-                    this._viewContainer.createEmbeddedView(this._template);
+                    //TODO - think of some optimization for performance reasons
+                    let condition: string = <string>this.permission;
+                    condition.replace(/(.*?)(?:&+|\|+|\(|\))/g, "$1")
+                        .split(" ")
+                        .filter(function(itm){return itm.trim()})
+                        .forEach(permissionName => condition = condition.replace(new RegExp(permissionName, 'g'), (userIdentity.permissions.indexOf(permissionName) > -1).toString()));
+
+                    if(new Function(`return (${condition})`)())
+                    {
+                        this._viewContainer.createEmbeddedView(this._template);
+                    }
+                }
+                //Permission name string
+                else
+                {
+                    let stringPermission: string = <string>this.permission;
+
+                    if(userIdentity.permissions.indexOf(stringPermission) > -1)
+                    {
+                        this._viewContainer.createEmbeddedView(this._template);
+                    }
                 }
             }
         }
