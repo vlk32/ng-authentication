@@ -1,10 +1,7 @@
 import {FactoryProvider} from '@angular/core';
 import {isFunction, isArray, isBlank} from '@anglr/common';
-import {Observable} from 'rxjs/Observable';
-import {Observer} from 'rxjs/Observer';
-import {Subject} from 'rxjs/Subject';
+import {Observable, Observer, Subject, empty} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {empty} from 'rxjs/observable/empty';
 
 import {UserIdentity} from './userIdentity';
 import {AuthenticationServiceOptions, AUTHENTICATION_SERVICE_OPTIONS} from './authenticationServiceOptions.interface';
@@ -113,7 +110,7 @@ export class AuthenticationService<TUserInfo>
                           reject(error);
                           this._isInitializedResolver(true);
   
-                          return empty<UserIdentity<TUserInfo>>();
+                          return empty();
                       }))
                 .subscribe((itm: UserIdentity<TUserInfo>) =>
                 {

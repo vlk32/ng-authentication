@@ -1,8 +1,7 @@
 import {FactoryProvider, InjectionToken, Injector} from '@angular/core';
 import {HttpInterceptor, HTTP_INTERCEPTORS, HttpEvent, HttpHandler} from '@angular/common/http';
 import {isBlank, isFunction, IgnoredInterceptorsService, HttpRequestIgnoredInterceptorId} from '@anglr/common';
-import {Observable, ObservableInput} from 'rxjs/Observable';
-import {Observer} from 'rxjs/Observer';
+import {Observable, ObservableInput, Observer} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
 /**

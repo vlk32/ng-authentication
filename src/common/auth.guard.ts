@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot} from '@angular/router';
 import {AuthenticationService} from './authentication.service';
 import {AuthorizationDecoratedComponent} from './authorize.decorator';
-import {Observable} from 'rxjs/Observable';
-import {Observer} from 'rxjs/Observer';
+import {Observable, Observer} from 'rxjs';
 
 /**
  * Routing guard that is used for authorization of user
