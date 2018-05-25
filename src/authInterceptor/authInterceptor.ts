@@ -1,6 +1,6 @@
 import {FactoryProvider, InjectionToken, Injector} from '@angular/core';
 import {HttpInterceptor, HTTP_INTERCEPTORS, HttpEvent, HttpHandler} from '@angular/common/http';
-import {isBlank, isFunction, IgnoredInterceptorsService, HttpRequestIgnoredInterceptorId} from '@anglr/common';
+import {isBlank, IgnoredInterceptorsService, HttpRequestIgnoredInterceptorId} from '@anglr/common';
 import {Observable, ObservableInput, Observer} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
@@ -35,7 +35,7 @@ export abstract class AuthInterceptorConfig
 /**
  * Token used for injecting custom configuration for AuthInterceptor
  */
-export const AUTH_INTERCEPTOR_CONFIG: InjectionToken<AuthInterceptorConfig>  = new InjectionToken<AuthInterceptorConfig>("auth-interceptor-config");
+export const AUTH_INTERCEPTOR_CONFIG: InjectionToken<AuthInterceptorConfig> = new InjectionToken<AuthInterceptorConfig>("auth-interceptor-config");
 
 /**
  * AuthInterceptor used for intercepting http responses and handling 401, 403 statuses
@@ -123,11 +123,7 @@ export class AuthInterceptor implements HttpInterceptor
  */
 export function authInterceptorProviderFactory(config: AuthInterceptorConfig, injector: Injector)
 {
-    if(isBlank(config) ||
-       isBlank(config.isAuthenticated) || !isFunction(config.isAuthenticated) ||
-       isBlank(config.isAuthPage) || !isFunction(config.isAuthPage) ||
-       isBlank(config.showAccessDenied) || !isFunction(config.showAccessDenied) ||
-       isBlank(config.showAuthPage) || !isFunction(config.showAuthPage))
+    if(isBlank(config) || !(config instanceof AuthInterceptorConfig))
     {
         throw new Error("Provided configuration for 'AuthInterceptor' is not of type 'AutInterceptorConfig', you must provide one!");
     }

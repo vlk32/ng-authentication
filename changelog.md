@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 5.0.0-beta.2
+ - `@anglr/authentication` is now marked as *sideEffects* free
+ - removed `forRoot` methods from `AuthorizationModule`
+ - guard `AuthGuard` is now *tree-shakeable*
+ - provider `AUTHENTICATION_SERVICE_OPTIONS` must be provided explictly
+ - provider `AuthenticationService` is now *tree-shakeable*
+
 ## Version 5.0.0-beta.1
  - aktualizácia balíčkov `Angular` na `6`
  - aktualizácia `Webpack` na verziu `4`

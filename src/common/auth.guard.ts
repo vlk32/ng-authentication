@@ -7,7 +7,7 @@ import {Observable, Observer} from 'rxjs';
 /**
  * Routing guard that is used for authorization of user
  */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AuthGuard implements CanActivate
 {
     //######################### constructor #########################

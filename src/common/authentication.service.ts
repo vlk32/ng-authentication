@@ -1,4 +1,4 @@
-import {FactoryProvider} from '@angular/core';
+import {Injectable, Inject, Injector} from '@angular/core';
 import {isFunction, isArray, isBlank} from '@anglr/common';
 import {Observable, Observer, Subject, empty} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -8,8 +8,29 @@ import {AuthenticationServiceOptions, AUTHENTICATION_SERVICE_OPTIONS} from './au
 import {AccessToken} from './accessToken';
 
 /**
+ * Factory used for creating AuthenticationService
+ * @param options Options passed to created service
+ */
+export function authenticationServiceFactory(options: AuthenticationServiceOptions<any>)
+{
+    if(isBlank(options) ||
+       isBlank(options.getUserIdentity) || !isFunction(options.getUserIdentity) ||
+       isBlank(options.login) || !isFunction(options.login) ||
+       isBlank(options.logout) || !isFunction(options.logout) ||
+       isBlank(options.isAuthPage) || !isFunction(options.isAuthPage) ||
+       isBlank(options.showAccessDenied) || !isFunction(options.showAccessDenied) ||
+       isBlank(options.showAuthPage) || !isFunction(options.showAuthPage))
+    {
+        throw new Error("Options must be set and must implement AuthenticationServiceOptions");
+    }
+
+    return new AuthenticationService(options);
+}
+
+/**
  * Authentication service managing authentication
  */
+@Injectable({providedIn: 'root', deps: [AUTHENTICATION_SERVICE_OPTIONS], useFactory: authenticationServiceFactory})
 export class AuthenticationService<TUserInfo>
 {
     //######################### private fields #########################
@@ -45,7 +66,8 @@ export class AuthenticationService<TUserInfo>
     }
 
     //######################### constructor #########################
-    constructor(private _options: AuthenticationServiceOptions<TUserInfo>)
+    //TODO - report bug, this is HACK to be compilable
+    constructor(@Inject(Injector) private _options: AuthenticationServiceOptions<TUserInfo>)
     {
         this.isInitialized = new Promise(resolve => this._isInitializedResolver = resolve);
     }
@@ -195,33 +217,3 @@ export class AuthenticationService<TUserInfo>
         return this._options.isAuthPage();
     }
 }
-
-/**
- * Factory used for creating AuthenticationService
- * @param options Options passed to created service
- */
-export function authenticationServiceFactory(options: AuthenticationServiceOptions<any>)
-{
-    if(isBlank(options) ||
-       isBlank(options.getUserIdentity) || !isFunction(options.getUserIdentity) ||
-       isBlank(options.login) || !isFunction(options.login) ||
-       isBlank(options.logout) || !isFunction(options.logout) ||
-       isBlank(options.isAuthPage) || !isFunction(options.isAuthPage) ||
-       isBlank(options.showAccessDenied) || !isFunction(options.showAccessDenied) ||
-       isBlank(options.showAuthPage) || !isFunction(options.showAuthPage))
-    {
-        throw new Error("Options must be set and must implement AuthenticationServiceOptions");
-    }
-
-    return new AuthenticationService(options);
-}
-
-/**
- * Provider used for injecting authentication service
- */
-export const AUTHENTICATION_SERVICE_PROVIDER: FactoryProvider =
-{ 
-    provide: AuthenticationService,
-    useFactory: authenticationServiceFactory,
-    deps: [AUTHENTICATION_SERVICE_OPTIONS]
-};
