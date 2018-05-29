@@ -150,7 +150,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
                 {
                     //TODO - think of some optimization for performance reasons
                     let condition: string = <string>this.permission;
-                    condition.replace(/(.*?)(?:&+|\|+|\(|\))/g, "$1")
+                    condition.replace(/!?(.*?)(?:&+|\|+|\(|\)|$)/g, "$1")
                         .split(" ")
                         .filter(function(itm){return itm.trim()})
                         .forEach(permissionName => condition = condition.replace(new RegExp(permissionName, 'g'), (userIdentity.permissions.indexOf(permissionName) > -1).toString()));

@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 5.0.1
+ - updated regular expression for `conditionString` for `AuthorizeDirective`, now should support `!` statements
+
 ## Version 5.0.0
  - stabilized for angular v6
 
