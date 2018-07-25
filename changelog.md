@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 5.0.2
+ - added new interceptor `suppressAuthInterceptor`
+ - updated `authInterceptor`, now supports blocking multiple parallel requests
+
 ## Version 5.0.1
  - updated regular expression for `conditionString` for `AuthorizeDirective`, now should support `!` statements
 

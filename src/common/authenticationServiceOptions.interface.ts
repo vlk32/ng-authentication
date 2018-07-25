@@ -36,12 +36,12 @@ export interface AuthenticationServiceOptions<TUserInfo>
     /**
      * Redirects current page to authentication page
      */
-    showAuthPage(): void;
+    showAuthPage(): Promise<boolean>;
 
     /**
      * Redirects current page to access denied page
      */
-    showAccessDenied(): void;
+    showAccessDenied(): Promise<boolean>;
 }
 
 /**

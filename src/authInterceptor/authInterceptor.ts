@@ -2,7 +2,7 @@ import {FactoryProvider, InjectionToken, Injector} from '@angular/core';
 import {HttpInterceptor, HTTP_INTERCEPTORS, HttpEvent, HttpHandler} from '@angular/common/http';
 import {isBlank, IgnoredInterceptorsService, HttpRequestIgnoredInterceptorId} from '@anglr/common';
 import {Observable, ObservableInput, Observer} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
 
 /**
  * Configuration object that is used by AuthInterceptor, overriding its properties allows you to customize configuration
@@ -24,12 +24,12 @@ export abstract class AuthInterceptorConfig
     /**
      * Redirects current page to authentication page
      */
-    abstract showAuthPage(): void;
+    abstract showAuthPage(): Promise<boolean>;
 
     /**
      * Redirects current page to access denied page
      */
-    abstract showAccessDenied(): void;
+    abstract showAccessDenied(): Promise<boolean>;
 }
 
 /**
@@ -42,6 +42,38 @@ export const AUTH_INTERCEPTOR_CONFIG: InjectionToken<AuthInterceptorConfig> = ne
  */
 export class AuthInterceptor implements HttpInterceptor
 {
+    //######################### private fields #########################
+
+    /**
+     * Counter for requests in progress
+     */
+    private _requestsInProgress: number = 0;
+
+    /**
+     * Indication whether is handling of 401, 403 blocked because one request is already handled
+     */
+    private _blocked: boolean = false;
+
+    //######################### private properties #########################
+
+    /**
+     * Counter for requests in progress
+     */
+    private set requestsInProgress(value: number)
+    {
+        this._requestsInProgress = value;
+
+        if(value < 1)
+        {
+            this._blocked = false;
+            this._requestsInProgress = 0;
+        }
+    }
+    private get requestsInProgress(): number
+    {
+        return this._requestsInProgress;
+    }
+
     //######################### constructors #########################
     constructor(private _config: AuthInterceptorConfig,
                 private _ignoredInterceptorsService: IgnoredInterceptorsService)
@@ -57,6 +89,8 @@ export class AuthInterceptor implements HttpInterceptor
      */
     public intercept(req: HttpRequestIgnoredInterceptorId<any>, next: HttpHandler): Observable<HttpEvent<any>>
     {
+        this.requestsInProgress++;
+
         return next.handle(req).pipe(catchError((err) =>
         {
             return Observable.create((observer: Observer<any>) =>
@@ -74,6 +108,16 @@ export class AuthInterceptor implements HttpInterceptor
                 //if auth error
                 if(err.status == 403 || err.status == 401)
                 {
+                    if(this._blocked)
+                    {
+                        observer.error(err);
+                        observer.complete();
+
+                        return;
+                    }
+
+                    this._blocked = true;
+
                     //auth error from auth page
                     if(this._config.isAuthPage())
                     {
@@ -85,12 +129,12 @@ export class AuthInterceptor implements HttpInterceptor
 
                     //auth error from other pages
                     this._config.isAuthenticated()
-                        .then(isAuthenticated =>
+                        .then(async isAuthenticated =>
                         {
                             //access denied user authenticated, not authorized
                             if(isAuthenticated)
                             {
-                                this._config.showAccessDenied();
+                                await this._config.showAccessDenied();
 
                                 observer.complete();
 
@@ -98,7 +142,7 @@ export class AuthInterceptor implements HttpInterceptor
                             }
 
                             //show auth page, user not authenticated
-                            this._config.showAuthPage();
+                            await this._config.showAuthPage();
 
                             observer.complete();
 
@@ -113,7 +157,8 @@ export class AuthInterceptor implements HttpInterceptor
                 observer.error(err);
                 observer.complete();
             }) as ObservableInput<HttpEvent<any>>;
-        }));
+        }),
+        tap(() => this.requestsInProgress--, () => this.requestsInProgress--));
     }
 }
 

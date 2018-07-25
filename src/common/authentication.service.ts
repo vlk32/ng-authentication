@@ -195,17 +195,17 @@ export class AuthenticationService<TUserInfo>
     /**
      * Redirects current page to authentication page
      */
-    public showAuthPage(): void
+    public showAuthPage(): Promise<boolean>
     {
-        this._options.showAuthPage();
+        return this._options.showAuthPage();
     }
 
     /**
      * Redirects current page to access denied page
      */
-    public showAccessDenied(): void
+    public showAccessDenied(): Promise<boolean>
     {
-        this._options.showAccessDenied();
+        return this._options.showAccessDenied();
     }
 
     /**
