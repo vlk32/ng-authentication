@@ -1,5 +1,5 @@
 import {Injectable, Inject, Injector} from '@angular/core';
-import {isFunction, isArray, isBlank} from '@anglr/common';
+import {isFunction, isArray, isBlank} from '@jscrpt/common';
 import {Observable, Observer, Subject, empty} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
@@ -76,7 +76,7 @@ export class AuthenticationService<TUserInfo>
 
     /**
      * Tests whether is used authorized for specified permission
-     * @param  {string} permission Permission name that is tested
+     * @param permission Permission name that is tested
      * @returns Promise<boolean> True if user is authorized otherwise false
      */
     public isAuthorized(permission: string) : Promise<boolean>
@@ -108,7 +108,7 @@ export class AuthenticationService<TUserInfo>
 
     /**
      * Gets user identity
-     * @param  {boolean} refresh? Indication that server get user identity should be called, otherwise cached response will be used
+     * @param refresh? Indication that server get user identity should be called, otherwise cached response will be used
      * @returns Promise
      */
     public getUserIdentity(refresh?: boolean): Promise<UserIdentity<TUserInfo>>
@@ -147,7 +147,7 @@ export class AuthenticationService<TUserInfo>
 
     /**
      * Method logs user into system
-     * @param  {AccessToken} accessToken Access token holding authentication information
+     * @param accessToken Access token holding authentication information
      * @returns Observable
      */
     public login(accessToken: AccessToken): Observable<any>

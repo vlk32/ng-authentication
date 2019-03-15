@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot} from '@angular/router';
+import {Observable, Observer} from 'rxjs';
+
 import {AuthenticationService} from './authentication.service';
 import {AuthorizationDecoratedComponent} from './authorize.decorator';
-import {Observable, Observer} from 'rxjs';
 
 /**
  * Routing guard that is used for authorization of user
@@ -19,8 +20,8 @@ export class AuthGuard implements CanActivate
 
     /**
      * Tests whether component can be activated
-     * @param  {ActivatedRouteSnapshot} next Information about next coming route
-     * @param  {RouterStateSnapshot} state Information about router state
+     * @param next Information about next coming route
+     * @param state Information about router state
      * @returns Observable
      */
     canActivate(next: ActivatedRouteSnapshot) : Observable<boolean>

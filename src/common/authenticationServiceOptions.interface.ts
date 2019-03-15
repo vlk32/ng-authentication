@@ -1,5 +1,6 @@
 import {InjectionToken} from '@angular/core';
 import {Observable} from 'rxjs';
+
 import {UserIdentity} from './userIdentity';
 import {AccessToken} from './accessToken';
 
@@ -10,7 +11,7 @@ export interface AuthenticationServiceOptions<TUserInfo>
 {
     /**
      * Method logs user into system
-     * @param  {AccessToken} accessToken Access token holding authentication information
+     * @param accessToken Access token holding authentication information
      * @returns Observable
      */
     login(accessToken: AccessToken): Observable<any>;

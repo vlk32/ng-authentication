@@ -1,6 +1,7 @@
 import {FactoryProvider, InjectionToken, Injector} from '@angular/core';
 import {HttpInterceptor, HTTP_INTERCEPTORS, HttpEvent, HttpHandler} from '@angular/common/http';
-import {isBlank, IgnoredInterceptorsService, HttpRequestIgnoredInterceptorId} from '@anglr/common';
+import {isBlank} from '@jscrpt/common';
+import {IgnoredInterceptorsService, HttpRequestIgnoredInterceptorId} from '@anglr/common';
 import {Observable, ObservableInput, Observer} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 
@@ -84,8 +85,8 @@ export class AuthInterceptor implements HttpInterceptor
 
     /**
      * Intercepts http request
-     * @param {HttpRequestIgnoredInterceptorId<any>} req Request to be intercepted
-     * @param {HttpHandler} next Next middleware that can be called for next processing
+     * @param req Request to be intercepted
+     * @param next Next middleware that can be called for next processing
      */
     public intercept(req: HttpRequestIgnoredInterceptorId<any>, next: HttpHandler): Observable<HttpEvent<any>>
     {
@@ -164,7 +165,7 @@ export class AuthInterceptor implements HttpInterceptor
 
 /**
  * Factory used for creating auth interceptor
- * @param {AuthInterceptorConfig} config Configuration for auth interceptor
+ * @param config Configuration for auth interceptor
  */
 export function authInterceptorProviderFactory(config: AuthInterceptorConfig, injector: Injector)
 {
