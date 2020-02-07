@@ -11,7 +11,7 @@ export interface AuthenticationServiceOptions<TUserInfo>
 {
     /**
      * Method logs user into system
-     * @param accessToken Access token holding authentication information
+     * @param accessToken - Access token holding authentication information
      * @returns Observable
      */
     login(accessToken: AccessToken): Observable<any>;

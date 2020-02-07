@@ -20,8 +20,8 @@ export class AuthGuard implements CanActivate
 
     /**
      * Tests whether component can be activated
-     * @param next Information about next coming route
-     * @param state Information about router state
+     * @param next - Information about next coming route
+     * @param state - Information about router state
      * @returns Observable
      */
     canActivate(next: ActivatedRouteSnapshot) : Observable<boolean>

@@ -9,7 +9,7 @@ import {AccessToken} from './accessToken';
 
 /**
  * Factory used for creating AuthenticationService
- * @param options Options passed to created service
+ * @param options - Options passed to created service
  */
 export function authenticationServiceFactory(options: AuthenticationServiceOptions<any>)
 {
@@ -76,7 +76,7 @@ export class AuthenticationService<TUserInfo>
 
     /**
      * Tests whether is used authorized for specified permission
-     * @param permission Permission name that is tested
+     * @param permission - Permission name that is tested
      * @returns Promise<boolean> True if user is authorized otherwise false
      */
     public isAuthorized(permission: string) : Promise<boolean>
@@ -108,7 +108,7 @@ export class AuthenticationService<TUserInfo>
 
     /**
      * Gets user identity
-     * @param refresh? Indication that server get user identity should be called, otherwise cached response will be used
+     * @param refresh - Indication that server get user identity should be called, otherwise cached response will be used
      * @returns Promise
      */
     public getUserIdentity(refresh?: boolean): Promise<UserIdentity<TUserInfo>>
@@ -147,7 +147,7 @@ export class AuthenticationService<TUserInfo>
 
     /**
      * Method logs user into system
-     * @param accessToken Access token holding authentication information
+     * @param accessToken - Access token holding authentication information
      * @returns Observable
      */
     public login(accessToken: AccessToken): Observable<any>

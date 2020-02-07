@@ -11,7 +11,7 @@ export interface AuthorizationDecoratedComponent
 
 /**
  * Used for setting required permission name for authentication
- * @param permission Name of requested permission, that is used for displaying of component
+ * @param permission - Name of requested permission, that is used for displaying of component
  * @returns ClassDecorator
  */
 export function Authorize(permission: string)

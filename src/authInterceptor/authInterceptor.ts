@@ -60,6 +60,10 @@ export class AuthInterceptor implements HttpInterceptor
     /**
      * Counter for requests in progress
      */
+    private get requestsInProgress(): number
+    {
+        return this._requestsInProgress;
+    }
     private set requestsInProgress(value: number)
     {
         this._requestsInProgress = value;
@@ -69,10 +73,6 @@ export class AuthInterceptor implements HttpInterceptor
             this._blocked = false;
             this._requestsInProgress = 0;
         }
-    }
-    private get requestsInProgress(): number
-    {
-        return this._requestsInProgress;
     }
 
     //######################### constructors #########################
@@ -85,8 +85,8 @@ export class AuthInterceptor implements HttpInterceptor
 
     /**
      * Intercepts http request
-     * @param req Request to be intercepted
-     * @param next Next middleware that can be called for next processing
+     * @param req - Request to be intercepted
+     * @param next - Next middleware that can be called for next processing
      */
     public intercept(req: HttpRequestIgnoredInterceptorId<any>, next: HttpHandler): Observable<HttpEvent<any>>
     {
@@ -165,7 +165,7 @@ export class AuthInterceptor implements HttpInterceptor
 
 /**
  * Factory used for creating auth interceptor
- * @param config Configuration for auth interceptor
+ * @param config - Configuration for auth interceptor
  */
 export function authInterceptorProviderFactory(config: AuthInterceptorConfig, injector: Injector)
 {
