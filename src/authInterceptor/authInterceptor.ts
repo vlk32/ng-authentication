@@ -1,42 +1,12 @@
-import {FactoryProvider, InjectionToken, Injector} from '@angular/core';
+import {FactoryProvider, Injector} from '@angular/core';
 import {HttpInterceptor, HTTP_INTERCEPTORS, HttpEvent, HttpHandler} from '@angular/common/http';
-import {isBlank} from '@jscrpt/common';
 import {IgnoredInterceptorsService, HttpRequestIgnoredInterceptorId} from '@anglr/common';
+import {isBlank} from '@jscrpt/common';
 import {Observable, ObservableInput, Observer} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 
-/**
- * Configuration object that is used by AuthInterceptor, overriding its properties allows you to customize configuration
- */
-export abstract class AuthInterceptorConfig
-{
-    /**
-     * Gets indication whether is user authenticated or not
-     * @returns boolean
-     */
-    abstract isAuthenticated(): Promise<boolean>;
-
-    /**
-     * Gets indication whether request was done from authentication page
-     * @returns boolean
-     */
-    abstract isAuthPage(): boolean;
-
-    /**
-     * Redirects current page to authentication page
-     */
-    abstract showAuthPage(): Promise<boolean>;
-
-    /**
-     * Redirects current page to access denied page
-     */
-    abstract showAccessDenied(): Promise<boolean>;
-}
-
-/**
- * Token used for injecting custom configuration for AuthInterceptor
- */
-export const AUTH_INTERCEPTOR_CONFIG: InjectionToken<AuthInterceptorConfig> = new InjectionToken<AuthInterceptorConfig>("auth-interceptor-config");
+import {AuthInterceptorOptions} from './authInterceptor.options';
+import {AuthenticationService} from '../common/authentication.service';
 
 /**
  * AuthInterceptor used for intercepting http responses and handling 401, 403 statuses
@@ -76,9 +46,14 @@ export class AuthInterceptor implements HttpInterceptor
     }
 
     //######################### constructors #########################
-    constructor(private _config: AuthInterceptorConfig,
-                private _ignoredInterceptorsService: IgnoredInterceptorsService)
+    constructor(private _authSvc: AuthenticationService<any>,
+                private _ignoredInterceptorsService: IgnoredInterceptorsService,
+                private _options: AuthInterceptorOptions)
     {
+        if(isBlank(_options) || !(_options instanceof AuthInterceptorOptions))
+        {
+            this._options = new AuthInterceptorOptions();
+        }
     }
 
     //######################### public methods - implementation of HttpInterceptor #########################
@@ -119,8 +94,8 @@ export class AuthInterceptor implements HttpInterceptor
 
                     this._blocked = true;
 
-                    //auth error from auth page
-                    if(this._config.isAuthPage())
+                    //auth error from auth page are ignored
+                    if(this._authSvc.isAuthPage())
                     {
                         observer.error(err);
                         observer.complete();
@@ -129,13 +104,14 @@ export class AuthInterceptor implements HttpInterceptor
                     }
 
                     //auth error from other pages
-                    this._config.isAuthenticated()
-                        .then(async isAuthenticated =>
+                    this._authSvc.getUserIdentity(true)
+                        .then(async ({isAuthenticated}) =>
                         {
                             //access denied user authenticated, not authorized
-                            if(isAuthenticated)
+                            if((isAuthenticated && this._options.treatUnauthorizedAsForbidden) ||
+                               (isAuthenticated && !this._options.treatUnauthorizedAsForbidden && err.status == 403))
                             {
-                                await this._config.showAccessDenied();
+                                await this._authSvc.showAccessDenied();
 
                                 observer.complete();
 
@@ -143,7 +119,7 @@ export class AuthInterceptor implements HttpInterceptor
                             }
 
                             //show auth page, user not authenticated
-                            await this._config.showAuthPage();
+                            await this._authSvc.showAuthPage();
 
                             observer.complete();
 
@@ -165,16 +141,11 @@ export class AuthInterceptor implements HttpInterceptor
 
 /**
  * Factory used for creating auth interceptor
- * @param config - Configuration for auth interceptor
+ * @param injector - Injector used for obtaining dependencies
  */
-export function authInterceptorProviderFactory(config: AuthInterceptorConfig, injector: Injector)
+export function authInterceptorProviderFactory(injector: Injector)
 {
-    if(isBlank(config) || !(config instanceof AuthInterceptorConfig))
-    {
-        throw new Error("Provided configuration for 'AuthInterceptor' is not of type 'AutInterceptorConfig', you must provide one!");
-    }
-
-    return new AuthInterceptor(config, injector.get(IgnoredInterceptorsService));
+    return new AuthInterceptor(injector.get(AuthenticationService), injector.get(IgnoredInterceptorsService), injector.get(AuthInterceptorOptions, null));
 };
 
 /**
@@ -185,5 +156,5 @@ export const AUTH_INTERCEPTOR_PROVIDER: FactoryProvider =
     provide: HTTP_INTERCEPTORS,
     multi: true,
     useFactory: authInterceptorProviderFactory,
-    deps: [AUTH_INTERCEPTOR_CONFIG, Injector]
+    deps: [Injector]
 };

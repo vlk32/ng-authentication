@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 8.0.0 (2020-08-10)
+
+### Features
+
+- added new `AuthInterceptorOptions` as options for `AuthInterceptor`
+    - new option `treatUnauthorizedAsForbidden`, which allows treating *401* as *403* http code
+
+### BREAKING CHANGES
+
+- minimal supported version of *Angular* is `10.0.0`
+- minimal supported version of `@jscrpt/common` is `1.2.0`
+- minimal supported version of `@anglr/common` is `8.0.0`
+- removed `AuthInterceptorConfig`, now using `AuthenticationService` instead
+- `AuthInterceptor` has new constructor parameters
+    - default behavior of `AuthInterceptor` is not to treat *401* as *403* http code as was before
+
 ## Version 7.0.0
 
 - updated to latest stable *Angular* 9
