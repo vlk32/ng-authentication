@@ -1,6 +1,6 @@
 import {ClassProvider, Injectable} from '@angular/core';
-import {HttpInterceptor, HTTP_INTERCEPTORS, HttpEvent, HttpHandler} from '@angular/common/http';
-import {IgnoredInterceptorsService, HttpRequestIgnoredInterceptorId} from '@anglr/common';
+import {HttpInterceptor, HTTP_INTERCEPTORS, HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
+import {IgnoredInterceptorsService, AdditionalInfo, IgnoredInterceptorId} from '@anglr/common';
 import {Observable, ObservableInput, Observer} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
@@ -22,7 +22,7 @@ export class SuppressAuthInterceptor implements HttpInterceptor
      * @param req - Request to be intercepted
      * @param next - Next middleware that can be called for next processing
      */
-    public intercept(req: HttpRequestIgnoredInterceptorId<any>, next: HttpHandler): Observable<HttpEvent<any>>
+    public intercept(req: HttpRequest<any> & AdditionalInfo<IgnoredInterceptorId>, next: HttpHandler): Observable<HttpEvent<any>>
     {
         return next.handle(req).pipe(catchError((err) =>
         {
@@ -30,7 +30,7 @@ export class SuppressAuthInterceptor implements HttpInterceptor
             {
                 //client error, not response from server, or is ignored
                 if (err.error instanceof Error || 
-                    (this._ignoredInterceptorsService && this._ignoredInterceptorsService.isIgnored(SuppressAuthInterceptor, req)))
+                    (this._ignoredInterceptorsService && this._ignoredInterceptorsService.isIgnored(SuppressAuthInterceptor, req.additionalInfo)))
                 {
                     observer.error(err);
                     observer.complete();

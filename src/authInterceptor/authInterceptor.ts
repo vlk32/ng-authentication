@@ -1,6 +1,6 @@
 import {FactoryProvider, Injector} from '@angular/core';
-import {HttpInterceptor, HTTP_INTERCEPTORS, HttpEvent, HttpHandler} from '@angular/common/http';
-import {IgnoredInterceptorsService, HttpRequestIgnoredInterceptorId} from '@anglr/common';
+import {HttpInterceptor, HTTP_INTERCEPTORS, HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
+import {IgnoredInterceptorsService, AdditionalInfo, IgnoredInterceptorId} from '@anglr/common';
 import {isBlank} from '@jscrpt/common';
 import {Observable, ObservableInput, Observer} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
@@ -63,7 +63,7 @@ export class AuthInterceptor implements HttpInterceptor
      * @param req - Request to be intercepted
      * @param next - Next middleware that can be called for next processing
      */
-    public intercept(req: HttpRequestIgnoredInterceptorId<any>, next: HttpHandler): Observable<HttpEvent<any>>
+    public intercept(req: HttpRequest<any> & AdditionalInfo<IgnoredInterceptorId>, next: HttpHandler): Observable<HttpEvent<any>>
     {
         this.requestsInProgress++;
 
@@ -73,7 +73,7 @@ export class AuthInterceptor implements HttpInterceptor
             {
                 //client error, not response from server, or is ignored
                 if (err.error instanceof Error || 
-                    (this._ignoredInterceptorsService && this._ignoredInterceptorsService.isIgnored(AuthInterceptor, req)))
+                    (this._ignoredInterceptorsService && this._ignoredInterceptorsService.isIgnored(AuthInterceptor, req.additionalInfo)))
                 {
                     observer.error(err);
                     observer.complete();
