@@ -73,13 +73,8 @@ export class AuthorizeDirective implements OnInit, OnDestroy
             this.permission = this.permission.split(",").map(itm => itm.trim());
         }
 
-        this._authService
-            .getUserIdentity()
-            .then(userIdentity =>
-            {
-                this._renderIfPermission(userIdentity);
-                this._changeDetector.detectChanges();
-            });
+        //synchronous render if permission is present
+        this._renderIfPermission(this._authService.userIdentity);
 
         this._subscription = this._authService
             .authenticationChanged
@@ -152,7 +147,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
                     let condition: string = <string>this.permission;
                     condition.replace(/!?(.*?)(?:&+|\|+|\(|\)|$)/g, "$1")
                         .split(" ")
-                        .filter(function(itm){return itm.trim()})
+                        .filter(itm => itm.trim())
                         .forEach(permissionName => condition = condition.replace(new RegExp(permissionName, 'g'), (userIdentity.permissions.indexOf(permissionName) > -1).toString()));
 
                     if(new Function(`return (${condition})`)())

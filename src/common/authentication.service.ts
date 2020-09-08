@@ -50,6 +50,11 @@ export class AuthenticationService<TUserInfo>
      */
     private _authenticationChangedSubject: Subject<UserIdentity<TUserInfo>> = new Subject<UserIdentity<TUserInfo>>();
 
+    /**
+     * Last value of obtained user identity
+     */
+    private _userIdentity: UserIdentity<TUserInfo>;
+
     //######################### public properties #########################
 
     /**
@@ -65,8 +70,16 @@ export class AuthenticationService<TUserInfo>
         return this._authenticationChangedSubject.asObservable();
     }
 
+    /**
+     * Gets last value of obtained user identity, recomended to use only after authenticationChanged was emitted
+     */
+    public get userIdentity(): UserIdentity<TUserInfo>
+    {
+        return this._userIdentity;
+    }
+
     //######################### constructor #########################
-    //TODO - report bug, this is HACK to be compilable
+    //TODO - report bug, this is HACK to be compilable, check if it works when library will be compiled for IVY
     constructor(@Inject(Injector) private _options: AuthenticationServiceOptions<TUserInfo>)
     {
         this.isInitialized = new Promise(resolve => this._isInitializedResolver = resolve);
@@ -79,7 +92,22 @@ export class AuthenticationService<TUserInfo>
      * @param permission - Permission name that is tested
      * @returns Promise<boolean> True if user is authorized otherwise false
      */
-    public isAuthorized(permission: string) : Promise<boolean>
+    public isAuthorizedSync(permission: string): boolean
+    {
+        if(isArray(this._userIdentity?.permissions))
+        {
+            return this._userIdentity.permissions.indexOf(permission) > -1;
+        }
+
+        return false;
+    }
+
+    /**
+     * Tests whether is used authorized for specified permission
+     * @param permission - Permission name that is tested
+     * @returns Promise<boolean> True if user is authorized otherwise false
+     */
+    public isAuthorized(permission: string): Promise<boolean>
     {
         return new Promise((resolve, reject) =>
         {
@@ -131,7 +159,7 @@ export class AuthenticationService<TUserInfo>
                       {
                           reject(error);
                           this._isInitializedResolver(true);
-  
+
                           return empty();
                       }))
                 .subscribe((itm: UserIdentity<TUserInfo>) =>
