@@ -157,13 +157,16 @@ export class AuthenticationService<TUserInfo>
                 .getUserIdentity()
                 .pipe(catchError(error =>
                       {
+                          this._userIdentity = null;
                           reject(error);
                           this._isInitializedResolver(true);
+
 
                           return empty();
                       }))
                 .subscribe((itm: UserIdentity<TUserInfo>) =>
                 {
+                    this._userIdentity = itm;
                     success(itm);
                     this._authenticationChangedSubject.next(itm);
                     this._isInitializedResolver(true);
