@@ -1,6 +1,6 @@
 import {Injectable, Inject, Injector} from '@angular/core';
 import {isFunction, isArray, isBlank} from '@jscrpt/common';
-import {Observable, Observer, Subject, empty} from 'rxjs';
+import {Observable, Observer, Subject, EMPTY} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
 import {UserIdentity} from './userIdentity';
@@ -31,7 +31,7 @@ export function authenticationServiceFactory(options: AuthenticationServiceOptio
  * Authentication service managing authentication
  */
 @Injectable({providedIn: 'root', deps: [AUTHENTICATION_SERVICE_OPTIONS], useFactory: authenticationServiceFactory})
-export class AuthenticationService<TUserInfo>
+export class AuthenticationService<TUserInfo = any>
 {
     //######################### private fields #########################
 
@@ -162,7 +162,7 @@ export class AuthenticationService<TUserInfo>
                           this._isInitializedResolver(true);
 
 
-                          return empty();
+                          return EMPTY;
                       }))
                 .subscribe((itm: UserIdentity<TUserInfo>) =>
                 {

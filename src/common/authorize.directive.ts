@@ -1,6 +1,7 @@
 import {Directive, TemplateRef, ViewContainerRef, OnInit, Input, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import {isString, isBoolean, isBlank} from '@jscrpt/common';
 import {Subscription} from 'rxjs';
+import {evaluatePermissions} from '../misc/utils';
 
 import {AuthenticationService} from './authentication.service';
 import {UserIdentity} from './userIdentity';
@@ -37,11 +38,17 @@ export class AuthorizeDirective implements OnInit, OnDestroy
      */
     @Input("authorizeConditionString")
     public conditionString: boolean = false;
+
+    /**
+     * Additional condition that is added to evaluation of permission
+     */
+    @Input("authorizeAddContition")
+    public addCondition: boolean = true;
     
     //######################### constructor #########################
     constructor(private _template: TemplateRef<any>,
                 private _viewContainer: ViewContainerRef,
-                private _authService: AuthenticationService<any>,
+                private _authService: AuthenticationService,
                 private _changeDetector: ChangeDetectorRef)
     {
     }
@@ -104,7 +111,7 @@ export class AuthorizeDirective implements OnInit, OnDestroy
     /**
      * Renders content if user has permissions
      */
-    private _renderIfPermission(userIdentity: UserIdentity<any>)
+    private _renderIfPermission(userIdentity: UserIdentity)
     {
         if(!isString(this.permission) && !Array.isArray(this.permission))
         {
@@ -115,56 +122,13 @@ export class AuthorizeDirective implements OnInit, OnDestroy
         {
             this._viewContainer.clear();
         
-            //Multiple conditions
-            if(Array.isArray(this.permission))
+            if(evaluatePermissions(userIdentity.permissions,
+                                   this.permission,
+                                   this.andCondition,
+                                   this.conditionString,
+                                   this.addCondition))
             {
-                let arrayPermission: string[] = <string[]>this.permission;
-
-                if(this.andCondition)
-                {
-                    //AND Condition
-                    if(arrayPermission.map(perm => userIdentity.permissions.indexOf(perm) > -1).every(itm => itm === true))
-                    {
-                        this._viewContainer.createEmbeddedView(this._template);
-                    }
-                }
-                else
-                {
-                    //OR Condition
-                    if(arrayPermission.map(perm => userIdentity.permissions.indexOf(perm) > -1).indexOf(true) > -1)
-                    {
-                        this._viewContainer.createEmbeddedView(this._template);
-                    }
-                }
-            }
-            //Single condition
-            else
-            {
-                //Condition string
-                if(this.conditionString)
-                {
-                    //TODO - think of some optimization for performance reasons
-                    let condition: string = <string>this.permission;
-                    condition.replace(/!?(.*?)(?:&+|\|+|\(|\)|$)/g, "$1")
-                        .split(" ")
-                        .filter(itm => itm.trim())
-                        .forEach(permissionName => condition = condition.replace(new RegExp(permissionName, 'g'), (userIdentity.permissions.indexOf(permissionName) > -1).toString()));
-
-                    if(new Function(`return (${condition})`)())
-                    {
-                        this._viewContainer.createEmbeddedView(this._template);
-                    }
-                }
-                //Permission name string
-                else
-                {
-                    let stringPermission: string = <string>this.permission;
-
-                    if(userIdentity.permissions.indexOf(stringPermission) > -1)
-                    {
-                        this._viewContainer.createEmbeddedView(this._template);
-                    }
-                }
+                this._viewContainer.createEmbeddedView(this._template);
             }
         }
     }

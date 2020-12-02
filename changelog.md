@@ -1,13 +1,21 @@
 # Changelog
 
-## Version 8.0.0 (2020-09-08)
+## Version 8.0.0 (2020-12-02)
 
 ### Features
 
 - added new `AuthInterceptorOptions` as options for `AuthInterceptor`
     - new option `treatUnauthorizedAsForbidden`, which allows treating *401* as *403* http code
-- added new property `userIdentity`, storing last value of `UserIdentity`
-- added new method `isAuthorizedSync`, used for synchronous checking whether user has *permission*
+- for `AuthenticationService`
+    - added new property `userIdentity`, storing last value of `UserIdentity`
+    - added new method `isAuthorizedSync`, used for synchronous checking whether user has *permission*
+- for `AuthorizeDirective`
+    - added new `addCondition` which adds additional condition that is added to evaluation of permission
+- added new `evaluatePermissions` function allowing use same (as used anywhere in package) permissions evaluation logic anywhere
+- added new `isAuthorized` function to get indication whether user is authorized
+- added new `LetAuthorizedDirective` allowing easy way to getting evaluated permission
+- `AuthenticationService` generic type has default `any` now
+- `UserIdentity` generic type has default `any` now
 
 ### BREAKING CHANGES
 
