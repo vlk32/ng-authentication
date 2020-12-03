@@ -70,7 +70,7 @@ export function evaluatePermissions(permissions: string[],
                 .filter(itm => itm.trim())
                 .forEach(permissionName => cond = cond.replace(new RegExp(permissionName, 'g'), (permissions.indexOf(permissionName) > -1).toString()));
 
-            if(new Function(`return (${condition})`)())
+            if(new Function(`return (${cond})`)())
             {
                 return true && addCondition;
             }
