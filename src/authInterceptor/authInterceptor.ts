@@ -105,7 +105,7 @@ export class AuthInterceptor implements HttpInterceptor
 
                     //auth error from other pages
                     // use cached identity if exists
-                    this._authSvc.getUserIdentity(this._options.useCachedUserIdentity)
+                    this._authSvc.getUserIdentity(!this._options.useCachedUserIdentity)
                         .then(async ({isAuthenticated}) =>
                         {
                             //access denied user authenticated, not authorized
