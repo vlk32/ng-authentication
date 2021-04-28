@@ -102,6 +102,26 @@ export class AuthenticationService<TUserInfo = any>
         return false;
     }
 
+    public authorized(permission: string): Promise<void>
+    {
+        return this.isAuthorized(permission)
+            .then(a => new Promise<void>((resolve, reject) => {
+                        if (a) resolve()
+                        else reject()
+                    })
+        )
+    }
+
+    public unauthorized(permission: string): Promise<void>
+    {
+        return this.isAuthorized(permission)
+            .then(a => new Promise<void>((resolve, reject) => {
+                        if (a) reject()
+                        else resolve()
+                    })
+        )
+    }
+
     /**
      * Tests whether is used authorized for specified permission
      * @param permission - Permission name that is tested

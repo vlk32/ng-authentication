@@ -4,6 +4,7 @@
 
 ### Features
 
+- added new methods `AuthenticationService.authorized` and `AuthenticationService.unauthorized` as syntax-sugar
 - added new option `AuthInterceptorOptions.useCachedUserIdentity`
     - Indication whether after 401/403 authInterceptor can use cached user identity or make new call to server
 - changed `AuthenticationServiceOptions.showAuthPage()`  and `AuthenticationServiceOptions.showAccessDenied()`
